@@ -1,0 +1,64 @@
+project_name: template-go
+
+env:
+  - CGO_ENABLED=0
+  - GO111MODULE=on
+
+builds:
+  -
+    id: main
+    binary: main
+    main: main-{{.Os}}-{{.Arch}}
+    ldflags:
+      - -s -w
+    goos:
+      - darwin
+      - linux
+    goarch:
+      - amd64
+      - arm
+      - arm64
+    ignore:
+      - goos: darwin
+        goarch: 386
+    no_unique_dist_dir: true
+
+archives:
+  -
+    id: main
+    builds:
+      - main
+    name_template: "template_go_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+
+dockers:
+  -
+    dockerfile: Dockerfile
+    goos: linux
+    goarch: amd64
+    ids:
+      - main
+    image_templates:
+      - "ghcr.io/ionos-cloud/{{.ProjectName}}:latest"
+      - "ghcr.io/ionos-cloud/{{.ProjectName}}:{{.Tag}}"
+      - "ghcr.io/ionos-cloud/{{.ProjectName}}"
+    build_flag_templates:
+      - "--pull"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--build-arg=BINARY=main-linux-amd64"
+      - "--platform=linux/amd64"
+
+
+gomod:
+  proxy: false
+
+release:
+  draft: false
+
+snapshot:
+  name_template: "{{.Tag}}"
+
+checksum:
+  name_template: "{{.ProjectName}}_checksums.txt"
