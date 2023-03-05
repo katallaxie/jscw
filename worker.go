@@ -1,8 +1,7 @@
 package jscw
-package jscw
 
 // Worker ...
-type Worker struct {}
+type Worker struct{}
 
 // NewWorker ...
 func NewWorker() *Worker {

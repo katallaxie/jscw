@@ -1,5 +1,7 @@
 package jscw
 
+// #cgo LDFLAGS: -framework JavaScriptCore
+
 // #include <stdlib.h>
 // #include <string.h>
 // #include <stdio.h>

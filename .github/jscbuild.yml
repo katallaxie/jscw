@@ -1,0 +1,37 @@
+name: JavaScriptCore Build
+
+on: workflow_dispatch
+
+jobs:
+    build:
+        name: Build V8 for ${{ matrix.platform }} ${{ matrix.arch }}
+        strategy:
+            fail-fast: false
+            matrix:
+                # We use macos-11 over macos-latest because macos-latest defaults to Catalina(10.15) and not Big Sur(11.0)
+                # We can switch to macos-latest whenever Big Sur becomes the default
+                # See https://github.com/actions/virtual-environments#available-environments
+                #
+                # We need xcode 12.4 or newer to cross compile between arm64/amd64
+                # https://github.com/actions/virtual-environments/blob/main/images/macos/macos-11-Readme.md#xcode
+                platform: [ubuntu-22.04]
+                arch: [x86_64, arm64]
+        runs-on: ${{ matrix.platform }}
+        steps:
+            - uses: actions/checkout@v3
+              with:
+                  submodules: true
+                  fetch-depth: 1
+            - name: Install g++-aarch64-linux-gnu
+              if: matrix.platform == 'ubuntu-22.04' && matrix.arch == 'arm64'
+              run: sudo apt update && sudo apt install g++-aarch64-linux-gnu libicu-dev python3 ruby bison flex cmake build-essential ninja-build git gperf -y
+            - name: Build V8 linux
+              if: matrix.platform == 'ubuntu-22.04'
+              run: cd WebKit && Tools/Scripts/build-webkit --jsc-only
+            - uses: peter-evans/create-pull-request@v4
+              with:
+                commit-message: Update V8 static library for ${{ matrix.platform }} ${{ matrix.arch }}
+                branch-suffix: random
+                delete-branch: true
+                title: V8 static library for ${{ matrix.platform }} ${{ matrix.arch }}
+                body: Auto-generated pull request to build V8 for ${{ matrix.platform }} ${{ matrix.arch }}
