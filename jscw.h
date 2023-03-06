@@ -1,15 +1,9 @@
-#ifndef JSCW_H
-#define JSCW_H
-#ifdef __cplusplus
+#include <JavaScriptCore/JSContextRef.h>
 
-#include "JavaScriptCore/JavaScript.h"
+JSValueRef jsSend(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception);
+JSValueRef jsRecv(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception);
+JSValueRef jsPrint(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception);
 
-extern "C" {
-#else
-
-#endif
-const char* Version();
-#ifdef __cplusplus
-}  // extern "C"
-#endif
-#endif  // JSCW_H
+// for terminate js
+typedef bool (*JSShouldTerminateCallback) (JSContextRef ctx, void* context);
+void JSContextGroupSetExecutionTimeLimit(JSContextGroupRef group, double limit, JSShouldTerminateCallback callback, void* context);
