@@ -3,23 +3,12 @@ package jscw
 import (
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestVersion(t *testing.T) {
 	println(Version())
-}
-
-func TestSetFlags(t *testing.T) {
-	// One of the V8 flags to use as a test:
-	//   --lazy (use lazy compilation)
-	//      type: bool  default: true
-	//args := []string{"hello", "--lazy", "foobar"}
-	//modified := SetFlags(args)
-	//if len(modified) != 2 || modified[0] != "hello" || modified[1] != "foobar" {
-	//	t.Fatalf("unexpected %v", modified)
-	//}
-
-	println("Not applicable to JavaScriptCore")
 }
 
 func TestPrint(t *testing.T) {
@@ -31,6 +20,14 @@ func TestPrint(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+}
+
+func BenchmarkPrint(b *testing.B) {
+	worker := New(func(msg []byte) []byte {
+		return nil
+	})
+	err := worker.Load("code.js", `JSCoreWorker.print("ready");`)
+	assert.NoError(b, err)
 }
 
 func TestSyntaxError(t *testing.T) {

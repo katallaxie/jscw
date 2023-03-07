@@ -12,12 +12,14 @@ type JSContext struct {
 	ref   C.JSGlobalContextRef
 }
 
+// NewContext creates a new JSContext
 func NewJSContext() *JSContext {
 	ctx := new(JSContext)
 	ctxGroup := C.JSContextGroupCreate()
 	ctxRef := C.JSGlobalContextCreateInGroup(ctxGroup, nil)
 	ctx.ref = ctxRef
 	ctx.group = ctxGroup
+
 	return ctx
 }
 
@@ -33,6 +35,11 @@ func (ctx *JSContext) Convert() C.JSContextRef {
 
 func (ctx *JSContext) GetGlobal() *JSObject {
 	return NewJSObjectFromRef(ctx.Convert(), C.JSContextGetGlobalObject(ctx.ref))
+}
+
+func (ctx *JSContext) Dispose() {
+	C.JSGlobalContextRelease(ctx.ref)
+	C.JSContextGroupRelease(ctx.group)
 }
 
 func (ctx *JSContext) EvaluateScript(script string, sourceUrl string) (*JSValue, error) {
