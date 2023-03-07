@@ -1,6 +1,7 @@
 package console
 
 import (
+	"errors"
 	"io"
 	"os"
 
@@ -34,6 +35,15 @@ func (c *console) GetLogFunctionCallback() jscw.FunctionCallback {
 }
 
 // Inject ...
-func (c *console) Inject(ctx *jscw.JSContext) {
+func (c *console) Inject(ctx *jscw.JSContext) error {
+	if ctx == nil {
+		return errors.New("v8go-polyfills/console: ctx is required")
+	}
 
+	consoleMethod := New()
+
+	global := ctx.GetGlobal()
+	global.SetProperty(consoleMethod.methodName, &jscw.JSValue{})
+
+	return nil
 }

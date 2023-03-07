@@ -29,3 +29,12 @@ func (info *FunctionCallbackInfo) Context() *JSContext {
 func (info *FunctionCallbackInfo) Object() *JSObject {
 	return info.this
 }
+
+// FunctionTemplate ...
+type FunctionTemplate struct {
+}
+
+// NewFunctionTemplate ...
+func NewFunctionTemplate(ctx *JSContext, cb FunctionCallback) *FunctionTemplate {
+	return &FunctionTemplate{}
+}
