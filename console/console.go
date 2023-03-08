@@ -1,5 +1,11 @@
 package console
 
+/*
+#include <stdlib.h>
+#include <JavaScriptCore/JSBase.h>
+#include <JavaScriptCore/JSContextRef.h>
+*/
+import "C"
 import (
 	"errors"
 	"io"
@@ -7,11 +13,6 @@ import (
 
 	"github.com/katallaxie/jscw"
 )
-
-// #include <stdlib.h>
-// #include <JavaScriptCore/JSBase.h>
-// #include <JavaScriptCore/JSContextRef.h>
-import "C"
 
 type console struct {
 	out        io.Writer
@@ -41,6 +42,8 @@ func (c *console) Inject(ctx *jscw.JSContext) error {
 	}
 
 	consoleMethod := New()
+
+	logFn := jscw.NewFunctionTemplate(ctx, consoleMethod.GetLogFunctionCallback())
 
 	global := ctx.GetGlobal()
 	global.SetProperty(consoleMethod.methodName, &jscw.JSValue{})

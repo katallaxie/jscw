@@ -1,10 +1,5 @@
 package jscw
 
-// #include <stdlib.h>
-// #include <JavaScriptCore/JSBase.h>
-// #include <JavaScriptCore/JSContextRef.h>
-import "C"
-
 // FunctionCallback is a callback function for a JavaScript function
 type FunctionCallback func(*FunctionCallbackInfo) *JSValue
 
