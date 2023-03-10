@@ -10,26 +10,31 @@ package jscw
 */
 import "C"
 
-type JSObject struct {
+// JSObject ...
+type JSObject interface {
+	Object() *jsObject
+}
+
+type jsObject struct {
 	ref C.JSObjectRef
 	ctx C.JSContextRef
 }
 
-func NewJSObject(ctx C.JSContextRef) *JSObject {
-	jsObj := new(JSObject)
+func NewJSObject(ctx C.JSContextRef) *jsObject {
+	jsObj := new(jsObject)
 	jsObj.ref = C.JSObjectMake(ctx, nil, nil)
 	jsObj.ctx = ctx
 	return jsObj
 }
 
-func NewJSObjectFromRef(ctx C.JSContextRef, ref C.JSObjectRef) *JSObject {
-	jsObj := new(JSObject)
+func NewJSObjectFromRef(ctx C.JSContextRef, ref C.JSObjectRef) *jsObject {
+	jsObj := new(jsObject)
 	jsObj.ref = ref
 	jsObj.ctx = ctx
 	return jsObj
 }
 
-func (o *JSObject) SetProperty(key string, value *JSValue) {
+func (o *jsObject) SetProperty(key string, value *jsValue) {
 	propertyKey := NewJSString(key)
 	defer propertyKey.Dispose()
 	jsErr := NewJSError(o.ctx)
@@ -45,7 +50,7 @@ func (o *JSObject) SetProperty(key string, value *JSValue) {
 	}
 }
 
-func (o *JSObject) GetProperty(key string) *JSValue {
+func (o *jsObject) GetProperty(key string) *jsValue {
 	jsErr := NewJSError(o.ctx)
 	ret := C.JSObjectGetProperty(o.ctx, o.ref, NewJSString(key).ref, &jsErr.ref)
 	if jsErr.ref != nil {
@@ -54,6 +59,6 @@ func (o *JSObject) GetProperty(key string) *JSValue {
 	return NewJSValueFromRef(o.ctx, ret)
 }
 
-func (o *JSObject) Value() *JSValue {
+func (o *jsObject) Value() *jsValue {
 	return NewJSValueFromRef(o.ctx, C.JSValueRef(o.ref))
 }

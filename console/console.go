@@ -6,6 +6,7 @@ package console
 #include <JavaScriptCore/JSContextRef.h>
 */
 import "C"
+
 import (
 	"errors"
 	"io"
@@ -43,10 +44,10 @@ func (c *console) Inject(ctx *jscw.JSContext) error {
 
 	consoleMethod := New()
 
-	logFn := jscw.NewFunctionTemplate(ctx, consoleMethod.GetLogFunctionCallback())
+	// logFn := jscw.NewFunctionTemplate(ctx, consoleMethod.GetLogFunctionCallback())
 
 	global := ctx.GetGlobal()
-	global.SetProperty(consoleMethod.methodName, &jscw.JSValue{})
+	global.SetProperty(consoleMethod.methodName, jscw.NewJSUndefined(ctx.Convert()))
 
 	return nil
 }

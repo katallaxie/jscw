@@ -26,8 +26,7 @@ func (info *FunctionCallbackInfo) Object() *JSObject {
 }
 
 // FunctionTemplate ...
-type FunctionTemplate struct {
-}
+type FunctionTemplate struct{}
 
 // NewFunctionTemplate ...
 func NewFunctionTemplate(ctx *JSContext, cb FunctionCallback) *FunctionTemplate {

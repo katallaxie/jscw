@@ -48,7 +48,7 @@ func (s *JSString) String() string {
 	return ret
 }
 
-func (s *JSString) Value(ctx C.JSContextRef) *JSValue {
+func (s *JSString) Value(ctx C.JSContextRef) *jsValue {
 	ref := C.JSValueMakeString(ctx, s.ref)
 	return NewJSValueFromRef(ctx, ref)
 }

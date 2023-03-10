@@ -33,7 +33,7 @@ func (ctx *JSContext) Convert() C.JSContextRef {
 	return C.JSContextRef(ctx.ref)
 }
 
-func (ctx *JSContext) GetGlobal() *JSObject {
+func (ctx *JSContext) GetGlobal() *jsObject {
 	return NewJSObjectFromRef(ctx.Convert(), C.JSContextGetGlobalObject(ctx.ref))
 }
 
@@ -42,7 +42,7 @@ func (ctx *JSContext) Dispose() {
 	C.JSContextGroupRelease(ctx.group)
 }
 
-func (ctx *JSContext) EvaluateScript(script string, sourceUrl string) (*JSValue, error) {
+func (ctx *JSContext) EvaluateScript(script string, sourceUrl string) (*jsValue, error) {
 	jsErr := NewJSError(ctx.Convert())
 	ret := C.JSEvaluateScript(
 		ctx.ref,

@@ -9,40 +9,56 @@ package jscw
 #include <JavaScriptCore/JSStringRef.h>
 */
 import "C"
+import "fmt"
 
-type JSValue struct {
-	ref C.JSValueRef
-	ctx C.JSContextRef
+// JSValue ...
+type JSValue interface {
+	fmt.Stringer
 }
 
-func NewJSValueFromRef(ctx C.JSContextRef, ref C.JSValueRef) *JSValue {
-	jsVal := new(JSValue)
+type jsValue struct {
+	ref C.JSValueRef
+	ctx C.JSContextRef
+
+	JSValue
+	JSObject
+}
+
+// NewJSValueFromRef ...
+func NewJSValueFromRef(ctx C.JSContextRef, ref C.JSValueRef) *jsValue {
+	jsVal := new(jsValue)
 	jsVal.ctx = ctx
 	jsVal.ref = ref
 	return jsVal
 }
 
-func NewJSUndefined(ctx C.JSContextRef) *JSValue {
-	jsVal := new(JSValue)
+func NewJSUndefined(ctx C.JSContextRef) *jsValue {
+	jsVal := new(jsValue)
 	jsVal.ctx = ctx
 	jsVal.ref = C.JSValueMakeUndefined(ctx)
 	return jsVal
 }
 
-func NewJSUndefinedFromCtxRef(ref C.JSContextRef) *JSValue {
-	jsVal := new(JSValue)
+func NewJSUndefinedFromCtxRef(ref C.JSContextRef) *jsValue {
+	jsVal := new(jsValue)
 	jsVal.ref = C.JSValueMakeUndefined(ref)
 	return jsVal
 }
 
-func (v *JSValue) String() string {
+// String ...
+func (v *jsValue) String() string {
 	jsErr := NewJSError(v.ctx)
 	jsStr := NewJSStringFromRef(C.JSValueToStringCopy(v.ctx, v.ref, &jsErr.ref))
 	defer jsStr.Dispose()
 	return jsStr.String()
 }
 
-func (v *JSValue) Object() *JSObject {
+// IsString ...
+func (v *jsValue) IsString() bool {
+	return false
+}
+
+func (v *jsValue) Object() *jsObject {
 	jsErr := NewJSError(v.ctx)
 	ret := C.JSValueToObject(v.ctx, v.ref, &jsErr.ref)
 	if jsErr.ref != nil {
@@ -51,7 +67,7 @@ func (v *JSValue) Object() *JSObject {
 	return NewJSObjectFromRef(v.ctx, ret)
 }
 
-func (v *JSValue) Float64() float64 {
+func (v *jsValue) Float64() float64 {
 	jsErr := NewJSError(v.ctx)
 	ret := C.JSValueToNumber(v.ctx, v.ref, &jsErr.ref)
 	if jsErr.ref != nil {
@@ -60,7 +76,7 @@ func (v *JSValue) Float64() float64 {
 	return float64(ret)
 }
 
-func (v *JSValue) Uint8() uint8 {
+func (v *jsValue) Uint8() uint8 {
 	jsErr := NewJSError(v.ctx)
 	ret := C.JSValueToNumber(v.ctx, v.ref, &jsErr.ref)
 	if jsErr.ref != nil {

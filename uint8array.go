@@ -49,7 +49,7 @@ func NewJSUint8Array(ctx C.JSContextRef, buf []byte) *JSUint8Array {
 	return val
 }
 
-func (a *JSUint8Array) JSValue() *JSValue {
+func (a *JSUint8Array) JSValue() *jsValue {
 	return NewJSValueFromRef(a.ctx, C.JSValueRef(a.ref))
 }
 

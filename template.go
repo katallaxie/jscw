@@ -4,6 +4,7 @@ package jscw
 #include <stdlib.h>
 */
 import "C"
+
 import (
 	"errors"
 	"runtime"

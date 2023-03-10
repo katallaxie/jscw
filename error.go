@@ -33,11 +33,11 @@ func NewJSErrorFromRef(ctx C.JSContextRef, ref C.JSValueRef) *JSError {
 	return err
 }
 
-func (e *JSError) Value() *JSValue {
+func (e *JSError) Value() *jsValue {
 	return NewJSValueFromRef(e.ctx, e.ref)
 }
 
-func (e *JSError) Object() *JSObject {
+func (e *JSError) Object() *jsObject {
 	return e.Value().Object()
 }
 
