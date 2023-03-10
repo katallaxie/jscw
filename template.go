@@ -29,3 +29,7 @@ func (t *template) Set(name string, val interface{}) error {
 
 	return nil
 }
+
+func (t *template) finalizer() {
+
+}

@@ -1,9 +1,17 @@
 package jscw
 
+import "runtime"
+
 // ObjectTemplate ...
-type ObjectTemplate struct{}
+type ObjectTemplate struct {
+	*template
+}
 
 // NewObjectTemplate ...
 func NewObjectTemplate(ctx *JSContext) *ObjectTemplate {
-	return &ObjectTemplate{}
+	tmpl := &template{}
+
+	runtime.SetFinalizer(tmpl, (*template).finalizer)
+
+	return &ObjectTemplate{tmpl}
 }
