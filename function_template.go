@@ -6,7 +6,7 @@ type FunctionCallback func(*FunctionCallbackInfo) *JSValue
 // FunctionCallbackInfo is a struct that contains information about a JavaScript function
 type FunctionCallbackInfo struct {
 	ctx  *JSContext
-	args []*JSValue
+	args []*jsValue
 	this *JSObject
 }
 

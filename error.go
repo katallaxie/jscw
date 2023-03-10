@@ -20,9 +20,11 @@ type JSError struct {
 	ref C.JSValueRef
 }
 
+// NewJSError ...
 func NewJSError(ctx C.JSContextRef) *JSError {
 	err := new(JSError)
 	err.ctx = ctx
+
 	return err
 }
 
