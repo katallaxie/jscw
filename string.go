@@ -9,12 +9,15 @@ package jscw
 import "C"
 
 import (
+	"fmt"
 	"syscall"
 	"unsafe"
 )
 
 type JSString struct {
 	ref C.JSStringRef
+
+	fmt.Stringer
 }
 
 func NewJSString(str string) *JSString {
